@@ -9,6 +9,8 @@ BLOCKLIST_URL="https://lists.blocklist.de/lists/ssh.txt"
 BLOCKLIST_HASH_URL="https://lists.blocklist.de/lists/ssh.txt.md5"
 BLOCKLIST_FILE="/etc/fail2ban/ssh-blocklist.txt"
 BLOCKLIST_HASH="/etc/fail2ban/ssh-blocklist.txt.md5"
+BLOCKLIST_LOG="/var/log/fail2ban.blocklist.log"
+
 
 
 # Get the list of IP addresses to ban
@@ -41,7 +43,11 @@ do
 	# make sure the line contains an IP address
 	if echo $IP_ADDRESS | grep --quiet '^[1-9][0-9]\{0,2\}\.[1-9][0-9]\{0,2\}\.[1-9][0-9]\{0,2\}\.[1-9][0-9]\{0,2\}$';
 	then
+	    # Manually ban the IP address via fail2ban
 	    /usr/bin/fail2ban-client set blocklist banip $IP_ADDRESS
+	    # - OR -
+	    # Log the IP address to a file for fail2ban to process
+	    # echo $(date +'%b %d %T') $HOSTNAME sshd: $IP_ADDRESS >> $BLOCKLIST_LOG
 	fi
 done < $BLOCKLIST_FILE
 
