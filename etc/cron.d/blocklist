@@ -1,0 +1,1 @@
+0 * * * *       root    /bin/bash /etc/fail2ban/blocklist.sh
