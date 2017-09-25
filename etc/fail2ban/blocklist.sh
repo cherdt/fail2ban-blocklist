@@ -6,8 +6,9 @@
 
 # define constants
 BLOCKLIST_URL="https://lists.blocklist.de/lists/ssh.txt"
-BLOCKLIST_URL_HASH="https://lists.blocklist.de/lists/ssh.txt"
+BLOCKLIST_HASH_URL="https://lists.blocklist.de/lists/ssh.txt.md5"
 BLOCKLIST_FILE="/etc/fail2ban/ssh-blocklist.txt"
+BLOCKLIST_HASH="/etc/fail2ban/ssh-blocklist.txt.md5"
 
 
 # Get the list of IP addresses to ban
@@ -15,12 +16,22 @@ BLOCKLIST_FILE="/etc/fail2ban/ssh-blocklist.txt"
 if [ -e /usr/bin/wget ];
 then
     /usr/bin/wget --quiet --output-document=$BLOCKLIST_FILE $BLOCKLIST_URL
+    /usr/bin/wget --quiet --output-document=$BLOCKLIST_HASH $BLOCKLIST_HASH_URL
 elif [ -e /usr/bin/curl ];
 then
     /usr/bin/curl --silent --output $BLOCKLIST_FILE $BLOCKLIST_URL
+    /usr/bin/curl --silent --output $BLOCKLIST_HASH $BLOCKLIST_HASH_URL
 else
-	echo "This script requires either curl or wget"
+	echo "ERROR: This script requires either curl or wget"
 	exit 1
+fi
+
+
+# Verify MD5 hash
+if ! echo "$(cat $BLOCKLIST_HASH)  $BLOCKLIST_FILE" | md5sum --status --check -
+then
+    echo "ERROR: MD5 checksum did not match"
+    exit 1
 fi
 
 
@@ -33,3 +44,6 @@ do
 	    /usr/bin/fail2ban-client set blocklist banip $IP_ADDRESS
 	fi
 done < $BLOCKLIST_FILE
+
+
+exit 0
