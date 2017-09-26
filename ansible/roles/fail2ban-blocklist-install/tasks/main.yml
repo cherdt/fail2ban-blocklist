@@ -1,0 +1,16 @@
+---
+
+- name: copy files
+  copy:
+    src: ../../../etc/
+    dest: /
+    owner: root
+    group: root
+    mode: 0744
+  notify:
+    - restart fail2ban
+
+- name: create empty log
+  file:
+    dest: /var/log/fail2ban.blocklist.log
+    state: touch

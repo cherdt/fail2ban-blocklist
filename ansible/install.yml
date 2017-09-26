@@ -1,0 +1,5 @@
+---
+
+- hosts: targets
+  roles:
+    - fail2ban-blocklist-install

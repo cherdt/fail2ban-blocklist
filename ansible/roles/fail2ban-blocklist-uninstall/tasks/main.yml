@@ -1,0 +1,32 @@
+---
+
+- name: remove cron.d file
+  file:
+    path: /etc/cron.d/blocklist
+    state: absent
+
+- name: remove blocklist.sh
+  file:
+    path: /etc/fail2ban/blocklist.sh
+    state: absent
+
+- name: remove jail configuration
+  file:
+    path: /etc/fail2ban/jail.d/blocklist.conf
+    state: absent
+  notify:
+    - restart fail2ban
+
+- name: remove filter configuration
+  file:
+    path: /etc/fail2ban/filter.d/sshd-blocklist.conf
+    state: absent
+  notify:
+    - restart fail2ban
+
+- name: remove log file
+  file:
+    path: /var/log/fail2ban.blocklist.log
+    state: absent
+  notify:
+    - restart fail2ban
