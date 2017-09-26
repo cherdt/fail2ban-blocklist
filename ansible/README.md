@@ -1,5 +1,7 @@
 # Ansible playbook for fail2ban-blocklist
 
+The target for install/uninstall is localhost. You can change the target(s) by editing the hosts file.
+
 ## Install
 
 Run the playbook to install the fail2ban blocklist integration. This will install fail2ban if it is not already present:
