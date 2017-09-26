@@ -3,10 +3,10 @@
 - name: copy files
   copy:
     src: ../../../etc/
-    dest: /
+    dest: /etc/
     owner: root
     group: root
-    mode: 0744
+    mode: 0644
   notify:
     - restart fail2ban
 
